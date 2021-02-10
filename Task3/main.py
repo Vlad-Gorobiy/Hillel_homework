@@ -1,7 +1,11 @@
 # ЗАДАЧА-1
 # Написать свой декоратор который будет проверять остаток от деления числа 100 на результат работы функции ниже.
 # Если остаток от деления = 0, вывести сообщение "We are OK!», иначе «Bad news guys, we got {}» остаток от деления.
+import functools
+
+
 def decorator(func):
+    @functools.wraps(func)
     def wrapper(arg):
         result = func(arg)
         if result != 0:
@@ -18,6 +22,7 @@ def decorator(func):
 # тогда зарейзить ошибку ValueError (raise ValueError(“string type is not supported”))
 
 def chek_type_arg(func):
+    @functools.wraps(func)
     def wrapper(arg):
         if type(arg) is int:
             result = func(arg)
@@ -35,19 +40,21 @@ def chek_type_arg(func):
 # количество раз обращений в cache.
 def cash_decorator(func):
     cache = {}
+    @functools.wraps(func)
     def wrapper(arg):
         if arg in cache:
             print("Used cache with counter = {}")
             return cache[arg]
         else:
             cache[arg] = func(arg)
-            print("Function executed with counter = {}, function result = {}")
+            print(f"Function executed with counter = , function result = {cache[arg]}")
             return cache[arg]
-        return wrapper
+    return wrapper
 
 
 
 @chek_type_arg
+@cash_decorator
 @decorator
 def foo(num):
     result = num % 3
@@ -57,7 +64,7 @@ def foo(num):
         print(f"Bad news guys, we got {result}")
     return result
 
-print("Task 1, 2")
+print("Task 1, 2, 3")
 foo(53)
 
 
